@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>TV BOX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  /* ===== GENEL RESET ===== */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+
+html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+body{
+  background:#0b0b12;
+  color:#fff;
+  min-height:100vh;
+  position:relative;
+}
+
+
+
+/* ===== DEV ARKA PLAN YAZISI ===== */
+body::before{
+  content:"TV BOX";
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:240px;
+  font-weight:900;
+  letter-spacing:30px;
+  color:rgba(255,255,255,0.03);
+  white-space:nowrap;
+  pointer-events:none;
+  z-index:0;
+}
+
+header, main, .ticker{
+  position:relative;
+  z-index:1;
+}
+
+/* ===== HEADER ===== */
+header{
+  display:flex;
+  align-items:center;
+  padding:15px 25px;
+  background:rgba(15,15,20,0.7);
+  backdrop-filter:blur(20px);
+  box-shadow:0 5px 25px rgba(0,0,0,0.6);
+}
+
+.logo{
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:2px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.logo:hover{
+  transform:scale(1.05);
+}
+
+/* ===== LAYOUT ===== */
+main{
+  display:flex;
+}
+
+
+/* ===== SIDEBAR ===== */
+aside{
+  width:230px;
+  background:#121212;
+  border-right:1px solid #1f1f1f;
+  padding:25px 15px;
+}
+
+/* Menü */
+.menu-item{
+  padding:14px 18px;
+  margin-bottom:10px;
+  border-radius:10px;
+  cursor:pointer;
+  color:#bbb;
+  font-size:15px;
+  transition:0.2s;
+}
+
+.menu-item:hover{
+  background:#1e1e1e;
+  color:#fff;
+  transform:translateX(4px);
+}
+
+.menu-item.active{
+  background:#2a2a2a;
+  color:#fff;
+}
+
+.player{
+  background:#111;
+  border-radius:0;
+  padding:0;
+  margin-bottom:25px;
+}
+
+video, iframe{
+  width:100%;
+  height:80vh;
+  border:none;
+  border-radius:0;
+  background:#000;
+}
+
+/* ===== CONTENT ===== */
+.content{
+  flex:1;
+  padding:25px;
+  padding-bottom:80px;
+}
+
+/* ===== PLAYER ===== */
+.player{
+  background:#111;
+  border-radius:18px;
+  padding:10px;
+  margin-bottom:25px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.6);
+}
+
+video, iframe{
+  width:100%;
+  height:480px;
+  border:none;
+  border-radius:14px;
+  background:#000;
+}
+
+/* ===== LOADER ===== */
+.loader{
+  width:60px;
+  height:60px;
+  border:5px solid rgba(255,255,255,0.1);
+  border-top:5px solid #fff;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin:150px auto;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* ===== GRID ===== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:18px;
+}
+
+/* ===== KART ===== */
+.card{
+  background:#151515;
+  height:150px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 8px 25px rgba(0,0,0,0.6);
+}
+
+.card span{
+  font-size:14px;
+  color:#ccc;
+}
+
+.card:hover{
+  transform:scale(1.08);
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.8),
+    0 0 20px rgba(255,255,255,0.05);
+}
+
+/* ===== TICKER ===== */
+.ticker{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:45px;
+  background:#111;
+  border-top:1px solid #222;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  z-index:999;
+}
+
+.ticker span{
+  white-space:nowrap;
+  padding-left:100%;
+  font-size:15px;
+  font-weight:600;
+  animation:tickerMove 35s linear infinite;
+}
+
+@keyframes tickerMove{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-100%)}
+}
+
+/* ===== SPLASH SCREEN ===== */
+#splash{
+  position:fixed;
+  inset:0;
+  background:#0b0b12;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  animation:splashOut 1s ease 2s forwards;
+}
+
+.splash-logo{
+  font-size:60px;
+  font-weight:900;
+  letter-spacing:8px;
+  animation:zoomIn 1.5s ease;
+}
+
+@keyframes zoomIn{
+  from{transform:scale(0.7);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+@keyframes splashOut{
+  to{opacity:0;visibility:hidden}
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablet */
+@media(max-width:1024px){
+  aside{
+    width:190px;
+  }
+  video,iframe{
+    height:380px;
+  }
+}
+
+/* Mobil */
+@media(max-width:768px){
+  main{
+    flex-direction:column;
+  }
+
+  aside{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    border-right:none;
+    border-bottom:1px solid #1f1f1f;
+  }
+
+  .menu-item{
+    flex:1 1 45%;
+    text-align:center;
+    margin:5px;
+  }
+
+  video,iframe{
+    height:230px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+/* Küçük Mobil */
+@media(max-width:480px){
+  .logo{
+    font-size:20px;
+  }
+
+  video,iframe{
+    height:200px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .ticker{
+    height:35px;
+  }
+
+  .ticker span{
+    font-size:12px;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0b0b12;
+  height: 100%;
+}
+
+</style>
+
+</head>
+
+<body>
+
+  <div id="splash">
+  <div class="splash-logo">TV BOX</div>
+</div>
+
+<header>
+  <div class="logo">
+</header>
+
+<main>
+  <aside> 
+    <div class="menu-item" onclick="showPage('beinsports',this)">⚽ Bein Sports</div>
+    <div class="menu-item" onclick="showPage('ssport',this)">🌟 S Sport</div>
+    <div class="menu-item" onclick="showPage('smartspor',this)">🏐 Smart Spor</div>
+    <div class="menu-item" onclick="showPage('tivibuspor',this)">📺 Tıvıbu Spor</div>
+    <div class="menu-item" onclick="showPage('tabiispor',this)">🏅 Tabii Spor</div>
+  </aside>
+
+  <div class="content">
+
+    <div class="player" id="playerBox">
+      <div style="color:#666;text-align:center;padding:180px 0">Video seç</div>
+    </div>
+
+
+
+
+
+    <div id="beinsports" class="page" style="display:none">
+      <div class="grid">
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=zirve')">
+          <span>Bein Sports 1</span>
+        </div>  
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=b2')">
+          <span>Bein Sports 2</span>
+        </div> 
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=b3')">
+          <span>Bein Sports 3</span>
+        </div> 
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=b4')">
+          <span>Bein Sports 4</span>
+        </div> 
+
+      </div>
+    </div>
+
+
+    <div id="ssport" class="page" style="display:none">
+      <div class="grid">
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=ss')">
+          <span>S Sport 1</span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=ss2')">
+          <span>S Sport 2</span>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div id="smartspor" class="page" style="display:none">
+      <div class="grid">
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=smarts')">
+          <span>Smart Spor 1</span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=sms2')">
+          <span>Smart Spor 2</span>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div id="tivibuspor" class="page" style="display:none">
+      <div class="grid">
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=t1')">
+          <span>Tıvıbu Spor 1</span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=t2')">
+          <span>Tıvıbu Spor 2</span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=t3')">
+          <span>Tıvıbu Spor 3</span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=t4')">
+          <span>Tıvıbu Spor 4</span>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div id="tabiispor" class="page" style="display:none">
+      <div class="grid">
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=ex1')">
+          <span>Tabii Spor 1</span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=ex2')">
+          <span>Tabii Spor 2 </span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=ex3')">
+          <span>Tabii Spor 3 (BOZUK)</span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=ex4')">
+          <span>Tabii Spor 4 (BOZUK)</span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=ex5')">
+          <span>Tabii Spor 5 (BOZUK)</span>
+        </div>
+
+        <div class="card" onclick="openLink('https://dengetv69.live/channel?id=ex6')">
+          <span>Tabii Spor 6 (BOZUK)</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ALT KAYAN YAZI -->
+<div class="ticker">
+  <span>
+    📺 TV BOX • CANLI MAÇLAR • FİLMLER • DİZİLER • CANLI TV • VE DAHA FAZLASI • BİZE DESTEK OLMAYI UNUTMAYINIZ •  KEYİFLİ SEHİRLER DİLERİZ...
+  </span>
+</div>
+
+<script>
+
+function makeFullscreen(){
+  const player = document.querySelector('#playerBox video, #playerBox iframe');
+  if(player.requestFullscreen){
+    player.requestFullscreen();
+  }else if(player.webkitRequestFullscreen){
+    player.webkitRequestFullscreen();
+  }
+}
+
+function openLink(url){
+  const box=document.getElementById('playerBox');
+  box.innerHTML='';
+
+  if(url.match(/\.(mp4|webm|ogg|m3u8)(\?|$)/i)){
+    const v=document.createElement('video');
+    v.src=url;
+    v.controls=true;
+    v.autoplay=true;
+    v.playsInline=true;
+    box.appendChild(v);
+
+    setTimeout(()=>{ makeFullscreen(); },500);
+
+  }else{
+    const f=document.createElement('iframe');
+    f.src=url;
+    f.allow="fullscreen";
+    f.allowFullscreen=true;
+    box.appendChild(f);
+
+    setTimeout(()=>{ makeFullscreen(); },500);
+  }
+}
+
+
+setInterval(function(){
+
+  const threshold = 160;
+
+  if(
+    window.outerWidth - window.innerWidth > threshold ||
+    window.outerHeight - window.innerHeight > threshold
+  ){
+    window.location.href = "https://streamable.com/e/qeefqa?autoplay=1";
+  }
+
+}, 1000);
+
+document.addEventListener("keydown", function(e){
+
+  if(
+    e.key === "F12" ||
+    (e.ctrlKey && e.key === "u") ||
+    (e.ctrlKey && e.shiftKey && e.key === "I")
+  ){
+    window.location.href = "https://streamable.com/e/qeefqa?autoplay=1";
+  }
+
+  document.addEventListener("contextmenu", function(e){
+  e.preventDefault();
+  window.location.href = "https://streamable.com/e/qeefqa?autoplay=1";
+});
+
+document.addEventListener("keydown", function(e){
+
+  if(
+    e.key === "F12" ||
+    (e.ctrlKey && e.key === "u") ||
+    (e.ctrlKey && e.shiftKey && e.key === "I") ||
+    (e.ctrlKey && e.key === "s") ||
+    (e.ctrlKey && e.shiftKey && e.key === "U")
+  ){
+    window.location.href = "https://streamable.com/e/qeefqa?autoplay=1";
+  }
+
+});
+
+});
+
+// SAYFA AÇILINCA OTOMATİK VİDEO
+window.addEventListener("load", function(){
+  openLink("https://streamable.com/e/lh9v5y?autoplay=1");
+});
+
+
+function resetPlayer(){
+  document.getElementById('playerBox').innerHTML =
+    '<div style="color:#666;text-align:center;padding:180px 0">Video seç</div>';
+}
+
+function goHome(){
+  showPage('anasayfa',document.querySelector('.menu-item'));
+}
+
+
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById(id).style.display='block';
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+  el.classList.add('active');
+  resetPlayer();
+}
+
+// SEZON GÖSTER
+function showSeason(id){
+
+  // sezon kartlarını gizle
+  document.getElementById('seasons').style.display = 'none';
+
+  // tüm sezon gridlerini gizle
+  document.querySelectorAll('#esrefruya .grid').forEach(el=>{
+    if(el.id && el.id !== 'seasons'){
+      el.style.display = 'none';
+    }
+  });
+
+  const seasonGrid = document.getElementById(id);
+
+  // Eğer geri kartı yoksa oluştur
+  if(!seasonGrid.querySelector('.back-card')){
+    const backCard = document.createElement('div');
+    backCard.className = 'card back-card';
+    backCard.innerHTML = '<span>⬅ Geri</span>';
+    backCard.onclick = goBackSeasons;
+
+    // geri kartını en üste ekle
+    seasonGrid.insertBefore(backCard, seasonGrid.firstChild);
+  }
+
+  // sezonu göster
+  seasonGrid.style.display = 'grid';
+}
+
+
+// SEZONLARA GERİ DÖN
+function goBackSeasons(){
+
+  // tüm sezon gridlerini gizle
+  document.querySelectorAll('#esrefruya .grid').forEach(el=>{
+    if(el.id && el.id !== 'seasons'){
+      el.style.display = 'none';
+    }
+  });
+
+  // sezon kartlarını tekrar göster
+  document.getElementById('seasons').style.display = 'grid';
+
+  // video player'ı temizle
+  if(typeof resetPlayer === "function"){
+    resetPlayer();
+  }
+}
+
+
+function goHome(){
+  showPage('home',document.querySelector('.menu-item'));
+}
+
+function openLink(url){
+  const box=document.getElementById('playerBox');
+  box.innerHTML='';
+  if(url.match(/\.(mp4|webm|ogg|m3u8)(\?|$)/i)){
+    const v=document.createElement('video');
+    v.src=url;
+    v.controls=true;
+    v.autoplay=true;
+    v.playsInline=true;
+    box.appendChild(v);
+  }else{
+    const f=document.createElement('iframe');
+    f.src=url;
+    f.allowFullscreen=true;
+    box.appendChild(f);
+  }
+}
+
+function goHome(){
+  showPage('home',document.querySelector('.menu-item'));
+}
+</script>
+
+</body>
+</html>
